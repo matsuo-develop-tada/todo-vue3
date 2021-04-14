@@ -1,8 +1,14 @@
 import { Todo } from 'src/interfaces/todo.interface'
+import { Color } from 'src/interfaces/color.interface'
 import axios from 'axios'
 
 const apiUrl = process.env.VUE_APP_API_URL
 
-export async function getTodos(): Promise<Todo[]> {
-  return (await axios.get<Todo[]>(`${apiUrl}/todos`)).data
+export const requests = {
+  getTodos: async (): Promise<Todo[]> => {
+    return (await axios.get<Todo[]>(`${apiUrl}/todos`)).data
+  },
+  getColors: async (): Promise<Color[]> => {
+    return (await axios.get<Color[]>(`${apiUrl}/colors`)).data
+  },
 }
