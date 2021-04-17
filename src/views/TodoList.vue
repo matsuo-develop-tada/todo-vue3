@@ -34,7 +34,7 @@
       <div class="todoList">
         <ul>
           <li v-for="todo in state.todos" :key="todo.id" :style="'background-color: ' + todo.color_code">
-            <input type="checkbox" v-model="todo.checked" />
+            <input type="checkbox" v-model="todo.checked" @change="setComplete()" />
             {{ todo.content }}
             <span>{{ formatDate(todo.dt_do, '/') }}</span>
           </li>
@@ -69,9 +69,13 @@ export default defineComponent({
     onMounted(async () => {
       state.todos = await requests.getTodos()
       state.colors = await requests.getColors()
+      setComplete()
+    })
+
+    const setComplete = () => {
       complete.value = state.todos.filter((todo) => todo.checked).length
       incomplete.value = state.todos.filter((todo) => !todo.checked).length
-    })
+    }
 
     const clearDtDo = () => {
       console.log('clearDtDo')
@@ -100,6 +104,7 @@ export default defineComponent({
 
       complete,
       incomplete,
+      setComplete,
     }
   },
 })
