@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, watch, reactive } from 'vue'
+import { defineComponent, onMounted, watch } from 'vue'
 import { Chart } from 'chart.js'
 
 export default defineComponent({
@@ -28,7 +28,7 @@ export default defineComponent({
       const canvas = document.getElementById('canvas') as HTMLCanvasElement
       const context = canvas.getContext('2d')
       if (!context) return
-      const chart = new Chart(context, {
+      new Chart(context, {
         type: 'doughnut',
         data: {
           labels: ['完了済', '未完了'],
