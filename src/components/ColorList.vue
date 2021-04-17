@@ -1,12 +1,12 @@
 <template>
   <div>
     <button @click="switchList()">
-      <span :style="'background-color: ' + selectedColorCode"></span>
+      <span :style="'background-color: #' + selectedColorCode"></span>
     </button>
     <ul v-if="isOpen">
       <li v-if="listMode === 'filter'" @click="changeColorCode('')"></li>
       <li v-for="color in state.colors" :key="color.id_color" @click="changeColorCode(color.color_code)">
-        <span :style="'background-color: ' + color.color_code"></span>
+        <span :style="'background-color: #' + color.color_code"></span>
       </li>
     </ul>
   </div>

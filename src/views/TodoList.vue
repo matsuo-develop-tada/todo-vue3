@@ -28,7 +28,7 @@
       <!-- Todo一覧 -->
       <div class="todoList">
         <ul>
-          <li v-for="todo in state.todos" :key="todo.id" :style="'background-color: ' + todo.color_code">
+          <li v-for="todo in state.todos" :key="todo.id" :style="'background-color: #' + todo.color_code">
             <input type="checkbox" v-model="todo.checked" @change="setComplete()" />
             {{ todo.content }}
             <span>{{ formatDate(todo.dt_do, '/') }}</span>
