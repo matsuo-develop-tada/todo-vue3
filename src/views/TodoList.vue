@@ -10,18 +10,13 @@
     <main>
       <nav>
         <!-- 実行日時フィルター -->
-        <input type="date" v-model="selectedDtDo" @keydown="clearDtDo()" />
+        <div class="dateFilter">
+          <input type="date" v-model="selectedDtDo" />
+        </div>
 
         <!-- カラーフィルター -->
         <div class="colorFilter">
-          <button @click="switchColorCodeList()">
-            <span :style="'background-color: ' + selectedColorCode"></span>
-          </button>
-          <ul v-if="isOpen">
-            <li v-for="color in state.colors" :key="color.id_color" @click="changeColorCode(color.color_code)">
-              <span :style="'background-color: ' + color.color_code"></span>
-            </li>
-          </ul>
+          <color-list :listMode="'filter'" @changeColorCode="changeColorCode" />
         </div>
 
         <!-- 達成度ドーナツチャート -->
@@ -48,63 +43,44 @@
 import { defineComponent, onMounted, reactive, ref } from 'vue'
 import { requests } from '../requests'
 import { Todo } from '../interfaces/todo.interface'
-import { Color } from '../interfaces/color.interface'
 import { formatDate } from '../common'
+import ColorList from '../components/ColorList.vue'
 import DoughnutChart from '../components/DoughnutChart.vue'
 
 export default defineComponent({
   components: {
+    ColorList,
     DoughnutChart,
   },
   setup: () => {
-    const state = reactive<{ todos: Todo[]; colors: Color[] }>({ todos: [], colors: [] })
+    const state = reactive<{ todos: Todo[] }>({ todos: [] })
     const selectedDtDo = ref(formatDate(new Date(), '-'))
-    const selectedColorCode = ref('')
-    const colorCodes = ref<string[]>([])
-    const isOpen = ref(false)
-
     const complete = ref(0)
     const incomplete = ref(0)
 
-    onMounted(async () => {
-      state.todos = await requests.getTodos()
-      state.colors = await requests.getColors()
-      setComplete()
-    })
-
     const setComplete = () => {
       complete.value = state.todos.filter((todo) => todo.checked).length
-      incomplete.value = state.todos.filter((todo) => !todo.checked).length
+      incomplete.value = state.todos.length - complete.value
+    }
+    const changeColorCode = (...array: string[]) => {
+      const colorCode = array[0]
+      console.log(colorCode)
     }
 
-    const clearDtDo = () => {
-      console.log('clearDtDo')
-      selectedDtDo.value = ''
-    }
-
-    const switchColorCodeList = () => {
-      isOpen.value = !isOpen.value
-    }
-
-    const changeColorCode = (colorCode: string) => {
-      selectedColorCode.value = colorCode
-      isOpen.value = false
-    }
+    onMounted(async () => {
+      state.todos = await requests.getTodos()
+      setComplete()
+    })
 
     return {
       state,
       selectedDtDo,
-      selectedColorCode,
-      formatDate,
-      colorCodes,
-      isOpen,
-      clearDtDo,
-      switchColorCodeList,
-      changeColorCode,
-
       complete,
       incomplete,
+
       setComplete,
+      changeColorCode,
+      formatDate,
     }
   },
 })
@@ -150,45 +126,15 @@ main {
     margin-bottom: 20px;
 
     // 実行日時フィルター
-    input[type='date'] {
-      height: 30px;
-      margin-right: 10px;
+    .dateFilter {
+      input {
+        height: 30px;
+        margin-right: 10px;
+      }
     }
 
     // カラーフィルター
     .colorFilter {
-      height: 30px;
-      button {
-        display: block;
-        width: 100px;
-        height: 100%;
-        padding: 5px;
-        cursor: pointer;
-        span {
-          display: block;
-          width: 100%;
-          height: 100%;
-        }
-      }
-      ul {
-        padding: 0;
-        margin: 0;
-        li {
-          list-style: none;
-          background-color: #efefef;
-          border: 1px solid #707070;
-          border-top: none;
-          height: 30px;
-          width: 100%;
-          padding: 5px;
-          cursor: pointer;
-          span {
-            display: block;
-            width: 100%;
-            height: 100%;
-          }
-        }
-      }
     }
 
     // 達成度ドーナツチャート
