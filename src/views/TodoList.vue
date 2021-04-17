@@ -11,7 +11,7 @@
       <nav>
         <!-- 実行日時フィルター -->
         <div class="dateFilter">
-          <input type="date" v-model="selectedDtDo" />
+          <input type="date" v-model="selectedDtDo" @change="filterTodos()" />
         </div>
 
         <!-- カラーフィルター -->
@@ -54,7 +54,8 @@ export default defineComponent({
   },
   setup: () => {
     const state = reactive<{ todos: Todo[] }>({ todos: [] })
-    const selectedDtDo = ref(formatDate(new Date(), '-'))
+    const selectedDtDo = ref('')
+    const selectedColorCode = ref('')
     const complete = ref(0)
     const incomplete = ref(0)
 
@@ -63,8 +64,11 @@ export default defineComponent({
       incomplete.value = state.todos.length - complete.value
     }
     const changeColorCode = (...array: string[]) => {
-      const colorCode = array[0]
-      console.log(colorCode)
+      selectedColorCode.value = array[0]
+      filterTodos()
+    }
+    const filterTodos = async () => {
+      state.todos = await requests.getTodos(selectedColorCode.value, selectedDtDo.value)
     }
 
     onMounted(async () => {
@@ -80,6 +84,7 @@ export default defineComponent({
 
       setComplete,
       changeColorCode,
+      filterTodos,
       formatDate,
     }
   },
