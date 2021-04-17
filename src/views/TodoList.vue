@@ -8,22 +8,25 @@
     </header>
 
     <main>
-      <!-- ナビゲーション -->
       <nav>
         <!-- 実行日時フィルター -->
         <input type="date" v-model="selectedDtDo" @keydown="clearDtDo()" />
+
         <!-- カラーフィルター -->
         <div class="colorFilter">
-          <!-- カラーリスト開閉ボタン -->
           <button @click="switchColorCodeList()">
             <span :style="'background-color: ' + selectedColorCode"></span>
           </button>
-          <!-- カラーリスト -->
           <ul v-if="isOpen">
             <li v-for="color in state.colors" :key="color.id_color" @click="changeColorCode(color.color_code)">
               <span :style="'background-color: ' + color.color_code"></span>
             </li>
           </ul>
+        </div>
+
+        <!-- 達成度ドーナツチャート -->
+        <div class="doughnutChart">
+          <doughnut-chart :complete="complete" :incomplete="incomplete" />
         </div>
       </nav>
 
@@ -31,7 +34,7 @@
       <div class="todoList">
         <ul>
           <li v-for="todo in state.todos" :key="todo.id" :style="'background-color: ' + todo.color_code">
-            <input type="checkbox" />
+            <input type="checkbox" v-model="todo.checked" />
             {{ todo.content }}
             <span>{{ formatDate(todo.dt_do, '/') }}</span>
           </li>
@@ -47,8 +50,12 @@ import { requests } from '../requests'
 import { Todo } from '../interfaces/todo.interface'
 import { Color } from '../interfaces/color.interface'
 import { formatDate } from '../common'
+import DoughnutChart from '../components/DoughnutChart.vue'
 
 export default defineComponent({
+  components: {
+    DoughnutChart,
+  },
   setup: () => {
     const state = reactive<{ todos: Todo[]; colors: Color[] }>({ todos: [], colors: [] })
     const selectedDtDo = ref(formatDate(new Date(), '-'))
@@ -56,9 +63,14 @@ export default defineComponent({
     const colorCodes = ref<string[]>([])
     const isOpen = ref(false)
 
+    const complete = ref(0)
+    const incomplete = ref(0)
+
     onMounted(async () => {
       state.todos = await requests.getTodos()
       state.colors = await requests.getColors()
+      complete.value = state.todos.filter((todo) => todo.checked).length
+      incomplete.value = state.todos.filter((todo) => !todo.checked).length
     })
 
     const clearDtDo = () => {
@@ -85,6 +97,9 @@ export default defineComponent({
       clearDtDo,
       switchColorCodeList,
       changeColorCode,
+
+      complete,
+      incomplete,
     }
   },
 })
@@ -123,20 +138,21 @@ main {
   min-width: 330px;
   padding: 0 10px;
   margin: 0 auto;
-  // ナビゲーション
+
   nav {
     display: flex;
     align-items: center;
     margin-bottom: 20px;
+
     // 実行日時フィルター
     input[type='date'] {
       height: 30px;
       margin-right: 10px;
     }
+
     // カラーフィルター
     .colorFilter {
       height: 30px;
-      // カラーリスト開閉ボタン
       button {
         display: block;
         width: 100px;
@@ -149,7 +165,6 @@ main {
           height: 100%;
         }
       }
-      // カラーリスト
       ul {
         padding: 0;
         margin: 0;
@@ -161,6 +176,7 @@ main {
           height: 30px;
           width: 100%;
           padding: 5px;
+          cursor: pointer;
           span {
             display: block;
             width: 100%;
@@ -168,6 +184,11 @@ main {
           }
         }
       }
+    }
+
+    // 達成度ドーナツチャート
+    .doughnutChart {
+      margin-left: auto;
     }
   }
 
