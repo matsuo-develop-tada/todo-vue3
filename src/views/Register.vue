@@ -13,9 +13,7 @@
     </div>
     <div class="textLeft">
       <button type="button" @click="backTop" class="btnBack btn-success">戻る<i class="fas fa-times"></i></button>
-      <button type="button" :disabled="validate" @click="regist" class="btn btn-success">
-        登録する <i class="fas fa-times"></i>
-      </button>
+      <button type="button" @click="regist" class="btn btn-success">登録する <i class="fas fa-times"></i></button>
     </div>
   </div>
 </template>
@@ -32,20 +30,20 @@ export default defineComponent({
   components: {
     ColorList,
   },
-  computed: {
-    validate: function() {
-      return !this.validateDeadline && !this.validateColor && !this.validateTodoContent ? false : true
-    },
-    validateDeadline() {
-      return !this.deadline
-    },
-    validateColor: function() {
-      return !this.colorCode
-    },
-    validateTodoContent: function() {
-      return !this.todoContent
-    },
-  },
+  // computed: {
+  //   validate: function() {
+  //     return !this.validateDeadline && !this.validateColor && !this.validateTodoContent ? false : true
+  //   },
+  //   validateDeadline() {
+  //     return !this.deadline
+  //   },
+  //   validateColor: function() {
+  //     return !this.colorCode
+  //   },
+  //   validateTodoContent: function() {
+  //     return !this.todoContent
+  //   },
+  // },
   data() {
     return {
       deadline: null,
@@ -68,15 +66,14 @@ export default defineComponent({
       }
     },
     regist() {
-      let self = this
       const todo = {
         content: this.todoContent,
         deadline: this.deadline,
         colorCode: this.colorCode,
       }
       // axiosでserver側にとばしてtodoを登録する処理を記述する
-      axios.post(`${apiUrl}/regist`, todo).then(function() {
-        self.$router.push('/')
+      axios.post(`${apiUrl}/regist`, todo).then(() => {
+        this.$router.push('/')
       })
     },
   },
