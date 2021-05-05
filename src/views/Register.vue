@@ -6,7 +6,9 @@
     <hr />
     <nav>
       <input class="datePic" type="date" v-model="state.deadline" />
-      <color-list class="colorFilter" @changeColorCode="changeColorCode" />
+      <div class="colorPic">
+        <color-list class="colorFilter" @changeColorCode="changeColorCode" />
+      </div>
     </nav>
     <div class="todoTextArea">
       <textarea v-model="state.todoContent" class="todoText" placeholder="予定を入力してください"></textarea>
@@ -27,11 +29,9 @@
 
 <script lang="ts">
 import { defineComponent, reactive, computed } from 'vue'
+import { requests } from '../requests'
+import { Todo } from '../interfaces/todo.interface'
 import ColorList from '../components/ColorList.vue'
-import axios from 'axios'
-
-// pthonのapiを使用するためのベースとなるURLをグローバル変数で初期化
-const apiUrl = process.env.VUE_APP_API_URL
 
 export default defineComponent({
   components: {
@@ -48,8 +48,6 @@ export default defineComponent({
       // 必須項目の日時、カラーコード、予定をそれぞれ未記入の場合「登録」ボタンを非活性にするようにする
       validate: computed(() => {
         return !stateValid.validateDeadline && !stateValid.validateColor && !stateValid.validateTodoContent
-          ? true
-          : false
       }),
       // 日付の入力チェック
       validateDeadline: computed(() => {
@@ -66,9 +64,9 @@ export default defineComponent({
     })
     // 各入力欄の初期値を設定する
     const state = reactive({
-      deadline: null,
-      todoContent: null,
-      colorCode: null,
+      deadline: '',
+      todoContent: '',
+      colorCode: '',
     })
     return {
       stateValid,
@@ -89,15 +87,25 @@ export default defineComponent({
       }
     },
     regist() {
-      const todo = {
+      const todo: Todo = {
+        id_todo: 0,
         content: this.state.todoContent,
-        deadline: this.state.deadline,
-        colorCode: this.state.colorCode,
+        color_code: this.state.colorCode,
+        checked: false,
+        dt_do: this.state.deadline,
+        dt_create: this.state.deadline,
+        dt_update: this.state.deadline,
       }
       // axiosでserver側にとばしてtodoを登録する処理を記述する
-      axios.post(`${apiUrl}/regist`, todo).then(() => {
-        this.$router.push('/')
-      })
+      requests
+        .registTodo(todo)
+        .then(() => {
+          // 確認してOKの場合、一覧のトップページへ遷移する
+          this.$router.push('/')
+        })
+        .catch((e) => {
+          console.log(e)
+        })
     },
   },
 })
@@ -116,6 +124,9 @@ export default defineComponent({
     .datePic {
       margin-right: 10px;
       height: 30px;
+    }
+    .colorPic {
+      z-index: 2;
     }
   }
   .todoText {
