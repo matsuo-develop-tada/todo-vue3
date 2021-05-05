@@ -63,8 +63,8 @@ export default defineComponent({
       complete.value = state.todos.filter((todo) => todo.checked).length
       incomplete.value = state.todos.length - complete.value
     }
-    const changeColorCode = (...array: string[]) => {
-      selectedColorCode.value = array[0]
+    const changeColorCode = (colorCode: string) => {
+      selectedColorCode.value = colorCode
       filterTodos()
     }
     const filterTodos = async () => {
