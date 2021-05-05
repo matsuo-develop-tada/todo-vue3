@@ -141,6 +141,7 @@ main {
     // カラーフィルター
     .colorFilter {
       width: 100px;
+      z-index: 2;
     }
 
     // 達成度ドーナツチャート
