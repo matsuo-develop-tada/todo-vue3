@@ -93,8 +93,9 @@ export default defineComponent({
         color_code: this.state.colorCode,
         checked: false,
         dt_do: this.state.deadline,
-        dt_create: this.state.deadline,
-        dt_update: this.state.deadline,
+        // null だとtsの型チェックに引っかかるので、空欄としている
+        dt_create: '',
+        dt_update: '',
       }
       // axiosでserver側にとばしてtodoを登録する処理を記述する
       requests

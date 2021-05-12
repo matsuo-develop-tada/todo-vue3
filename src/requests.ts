@@ -11,7 +11,7 @@ export const requests = {
   getColors: async (): Promise<Color[]> => {
     return (await axios.get<Color[]>(`${apiUrl}/colors`)).data
   },
-  registTodo: async (data: any): Promise<any> => {
-    return await axios.post(`${apiUrl}/regist`, data)
+  registTodo: async (data: Todo): Promise<Todo> => {
+    return await axios.post(`${apiUrl}/todos`, data)
   },
 }
