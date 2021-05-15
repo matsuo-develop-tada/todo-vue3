@@ -5,13 +5,27 @@
     </div>
     <hr />
     <nav>
-      <input class="datePic" type="date" v-model="state.deadline" />
+      <input
+        class="datePic"
+        v-bind:class="{ blank: stateValid.validateDeadline }"
+        type="date"
+        v-model="state.deadline"
+      />
       <div class="colorPic">
-        <color-list class="colorFilter" @changeColorCode="changeColorCode" />
+        <color-list
+          v-bind:class="{ blank: stateValid.validateColor }"
+          class="colorFilter"
+          @changeColorCode="changeColorCode"
+        />
       </div>
     </nav>
     <div class="todoTextArea">
-      <textarea v-model="state.todoContent" class="todoText" placeholder="予定を入力してください"></textarea>
+      <textarea
+        v-bind:class="{ blank: stateValid.validateTodoContent }"
+        v-model="state.todoContent"
+        class="todoText"
+        placeholder="予定を入力してください"
+      ></textarea>
     </div>
     <div class="validation" v-show="!stateValid.validate">
       <div class="alert" v-show="stateValid.validateDeadline">日付は必須項目です</div>
@@ -44,6 +58,7 @@ export default defineComponent({
       validateColor: boolean
       validateTodoContent: boolean
     }
+
     const stateValid: stateValidation = reactive({
       // 必須項目の日時、カラーコード、予定をそれぞれ未記入の場合「登録」ボタンを非活性にするようにする
       validate: computed(() => {
@@ -130,6 +145,9 @@ export default defineComponent({
       z-index: 2;
     }
   }
+  .blank {
+    border: 1px dotted red;
+  }
   .todoText {
     width: 70%;
     border-radius: 4px;
@@ -145,7 +163,7 @@ export default defineComponent({
   .validation {
     margin-top: 15px;
     width: 70%;
-    border: solid;
+    border: 1px solid;
     border-style: dotted;
     border-color: red;
     .alert {
