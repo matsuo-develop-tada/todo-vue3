@@ -53,13 +53,14 @@ export default defineComponent({
   },
   setup() {
     // interfaceを使用してvalidationの初期値を設定
-    interface stateValidation {
+    // interfaceは大文字スタート
+    interface StateValidation {
       validateDeadline: boolean
       validateColor: boolean
       validateTodoContent: boolean
     }
 
-    const stateValid: stateValidation = reactive({
+    const stateValid: StateValidation = reactive({
       // 必須項目の日時、カラーコード、予定をそれぞれ未記入の場合「登録」ボタンを非活性にするようにする
       validate: computed(() => {
         return !stateValid.validateDeadline && !stateValid.validateColor && !stateValid.validateTodoContent
@@ -102,20 +103,26 @@ export default defineComponent({
       }
     },
     regist() {
-      const todo: Todo = {
-        id_todo: 0,
-        content: this.state.todoContent,
-        color_code: this.state.colorCode,
-        checked: false,
-        dt_do: this.state.deadline,
-        // null だとtsの型チェックに引っかかるので、空欄としている
-        dt_create: '',
-        dt_update: '',
-      }
+      // const todo: Todo = {
+      //   id_todo: 0,
+      //   content: this.state.todoContent,
+      //   color_code: this.state.colorCode,
+      //   checked: false,
+      //   dt_do: this.state.deadline,
+      //   // null だとtsの型チェックに引っかかるので、空欄としている
+      //   dt_create: '',
+      //   dt_update: '',
+      // }
       // axiosでserver側にとばしてtodoを登録する処理を記述する
       requests
-        .registTodo(todo)
-        .then(() => {
+        .registTodo({
+          content: this.state.todoContent,
+          color_code: this.state.colorCode,
+          checked: false,
+          dt_do: this.state.deadline,
+        })
+        .then((data) => {
+          console.log(data)
           // 確認してOKの場合、一覧のトップページへ遷移する
           this.$router.push('/')
         })

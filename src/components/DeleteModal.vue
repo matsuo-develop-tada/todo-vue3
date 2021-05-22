@@ -1,12 +1,13 @@
 <template>
   <div class="deleteModal">
     <div class="modal">
-      <div class="title">
-        <p>完了済のTodoを削除してもよろしいですか</p>
-      </div>
+      <p class="title">
+        <span>完了済のTodoを</span>
+        <span>削除してもよろしいですか？</span>
+      </p>
       <div class="btnArea">
         <button class="delBtn" @click="deleteTodos">削除</button>
-        <button class="canBtn" @click="closeDeleteModal">戻る</button>
+        <button class="canBtn" @click="cancel">戻る</button>
       </div>
     </div>
   </div>
@@ -20,24 +21,27 @@ export default {
     completedTodos: Array,
   },
   methods: {
-    closeDeleteModal() {
-      this.$emit('closeDeleteModal')
+    cancel() {
+      this.$emit('cancel')
     },
     deleteTodos() {
-      requests.delTodos(this.completedTodos).then((response) => {
+      requests.delTodos(this.completedTodos).then((data) => {
+        console.log(data)
         this.$emit('closeDeleteModal')
       })
     },
   },
 }
 </script>
-
-<style style="scoped">
+<style lang="scss" scoped>
 .title {
   text-align: center;
+  span {
+    display: inline-block;
+  }
 }
 .deleteModal {
-  z-index: 1;
+  z-index: 3;
   position: fixed;
   top: 0;
   left: 0;
@@ -49,22 +53,22 @@ export default {
   justify-content: center;
 }
 .modal {
-  z-index: 1;
-  width: 30%;
-  padding: 1em;
-  background: #fff;
+  width: 90%;
+  max-width: 500px;
+  padding: 15px;
+  background: #ffffff;
 }
 .btnArea {
   position: relative;
   text-align: center;
 }
 .delBtn {
-  border-radius: 5px;
+  border-radius: 4px;
+  padding: 0 20px;
   margin-right: 2rem;
-  width: 20%;
 }
 .canBtn {
-  border-radius: 3px;
-  width: 20%;
+  border-radius: 4px;
+  padding: 0 20px;
 }
 </style>
