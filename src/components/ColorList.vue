@@ -64,7 +64,7 @@ div {
   height: 30px;
   button {
     display: block;
-    width: 100px;
+    width: 100%;
     height: 100%;
     padding: 5px;
     cursor: pointer;
@@ -75,6 +75,7 @@ div {
     }
   }
   ul {
+    width: 100%;
     padding: 0;
     margin: 0;
     li {
