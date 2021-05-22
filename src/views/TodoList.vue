@@ -105,14 +105,18 @@ export default defineComponent({
   methods: {
     showDeleteModal() {
       // 完了済（checkフラグがtrue）のid_todoを取得する
-      this.state.todos.filter((todo) => {
-        return todo.checked ? this.completedTodos.push(todo.id_todo) : ''
-      })
+      // this.state.todos.filter((todo) => {
+      //   return todo.checked ? this.completedTodos.push(todo.id_todo) : ''
+      // })
+      for (const todo of this.state.todos) {
+        if (todo.checked) {
+          this.completedTodos.push(todo.id_todo)
+        }
+      }
       this.showTodoDelete = true
     },
     closeDeleteModal() {
       this.showTodoDelete = false
-      location.reload()
     },
   },
 })
