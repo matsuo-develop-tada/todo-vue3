@@ -7,10 +7,11 @@
       <DeleteModal
         v-if="showTodoDelete"
         :completedTodos="completedTodos"
+        @cancel="cancel"
         @closeDeleteModal="closeDeleteModal"
-      ></DeleteModal>
+      />
 
-      <button class="createIcon">➕</button>
+      <router-link class="createIcon" to="register">➕</router-link>
     </header>
 
     <main>
@@ -22,12 +23,12 @@
 
         <!-- カラーフィルター -->
         <div class="colorFilter">
-          <color-list :listMode="'filter'" @changeColorCode="changeColorCode" />
+          <ColorList :listMode="'filter'" @changeColorCode="changeColorCode" />
         </div>
 
         <!-- 達成度ドーナツチャート -->
         <div class="doughnutChart">
-          <doughnut-chart :complete="complete" :incomplete="incomplete" />
+          <DoughnutChart :complete="complete" :incomplete="incomplete" />
         </div>
       </nav>
 
@@ -105,18 +106,24 @@ export default defineComponent({
   methods: {
     showDeleteModal() {
       // 完了済（checkフラグがtrue）のid_todoを取得する
-      // this.state.todos.filter((todo) => {
-      //   return todo.checked ? this.completedTodos.push(todo.id_todo) : ''
-      // })
+      this.completedTodos = []
       for (const todo of this.state.todos) {
         if (todo.checked) {
           this.completedTodos.push(todo.id_todo)
         }
       }
+      if (!this.completedTodos.length) {
+        return
+      }
       this.showTodoDelete = true
+    },
+    cancel() {
+      this.showTodoDelete = false
     },
     closeDeleteModal() {
       this.showTodoDelete = false
+      this.state.todos = this.state.todos.filter((todo) => !todo.checked)
+      this.setComplete()
     },
   },
 })
@@ -147,6 +154,7 @@ header {
   .createIcon {
     position: absolute;
     right: 10px;
+    text-decoration: none;
   }
 }
 

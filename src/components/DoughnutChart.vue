@@ -16,11 +16,9 @@ export default defineComponent({
   },
   setup: (props) => {
     watch([props], () => {
-      console.log('watch')
       drawChart()
     })
     onMounted(() => {
-      console.log('onMounted')
       drawChart()
     })
 

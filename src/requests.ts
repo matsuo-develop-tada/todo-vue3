@@ -11,10 +11,15 @@ export const requests = {
   getColors: async (): Promise<Color[]> => {
     return (await axios.get<Color[]>(`${apiUrl}/colors`)).data
   },
-  registTodo: async (data: Todo): Promise<void> => {
-    return await axios.post(`${apiUrl}/todos`, data)
+  registTodo: async (createTodoDto: {
+    content: string
+    color_code: string
+    checked: boolean
+    dt_do: string
+  }): Promise<Todo> => {
+    return (await axios.post<Todo>(`${apiUrl}/todos`, createTodoDto)).data
   },
-  delTodos: async (data: number): Promise<void> => {
-    return await axios.post(`${apiUrl}/delTodos`, data)
+  delTodos: async (ids: number[]): Promise<{}> => {
+    return (await axios.post(`${apiUrl}/delTodos`, ids)).data
   },
 }
