@@ -14,4 +14,7 @@ export const requests = {
   registTodo: async (data: Todo): Promise<Todo> => {
     return await axios.post(`${apiUrl}/todos`, data)
   },
+  delTodos: async (data: number): Promise<void> => {
+    return await axios.post(`${apiUrl}/delTodos`, data)
+  },
 }

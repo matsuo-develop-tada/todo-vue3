@@ -3,7 +3,13 @@
     <!-- ヘッダー -->
     <header>
       <h1>Todoリスト</h1>
-      <button class="deleteIcon">🗑</button>
+      <button class="deleteIcon" @click="showDeleteModal">🗑</button>
+      <DeleteModal
+        v-if="showTodoDelete"
+        :completedTodos="completedTodos"
+        @closeDeleteModal="closeDeleteModal"
+      ></DeleteModal>
+
       <button class="createIcon">➕</button>
     </header>
 
@@ -46,11 +52,13 @@ import { Todo } from '../interfaces/todo.interface'
 import { formatDate } from '../common'
 import ColorList from '../components/ColorList.vue'
 import DoughnutChart from '../components/DoughnutChart.vue'
+import DeleteModal from '../components/DeleteModal.vue'
 
 export default defineComponent({
   components: {
     ColorList,
     DoughnutChart,
+    DeleteModal,
   },
   setup: () => {
     const state = reactive<{ todos: Todo[] }>({ todos: [] })
@@ -64,7 +72,6 @@ export default defineComponent({
     }
     const changeColorCode = (...array: string[]) => {
       const colorCode = array[0]
-      console.log(colorCode)
     }
 
     onMounted(async () => {
@@ -82,6 +89,25 @@ export default defineComponent({
       changeColorCode,
       formatDate,
     }
+  },
+  data() {
+    return {
+      showTodoDelete: false,
+      completedTodos: [] as number[],
+    }
+  },
+  methods: {
+    showDeleteModal() {
+      // 完了済（checkフラグがtrue）のid_todoを取得する
+      this.state.todos.filter((todo) => {
+        return todo.checked ? this.completedTodos.push(todo.id_todo) : ''
+      })
+      this.showTodoDelete = true
+    },
+    closeDeleteModal() {
+      this.showTodoDelete = false
+      location.reload()
+    },
   },
 })
 </script>
