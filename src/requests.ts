@@ -5,8 +5,8 @@ import axios from 'axios'
 const apiUrl = process.env.VUE_APP_API_URL
 
 export const requests = {
-  getTodos: async (): Promise<Todo[]> => {
-    return (await axios.get<Todo[]>(`${apiUrl}/todos`)).data
+  getTodos: async (colorCode = '', dtDo = ''): Promise<Todo[]> => {
+    return (await axios.get<Todo[]>(`${apiUrl}/todos?color_code=${colorCode}&dt_do=${dtDo}`)).data
   },
   getColors: async (): Promise<Color[]> => {
     return (await axios.get<Color[]>(`${apiUrl}/colors`)).data
