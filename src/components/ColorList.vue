@@ -25,10 +25,13 @@ export default defineComponent({
       required: false,
       default: null,
     },
+    registeredColorCode: {
+      type: String,
+    },
   },
   setup: (props, { emit }) => {
     const state = reactive<{ colors: Color[] }>({ colors: [] })
-    const selectedColorCode = ref('')
+    const selectedColorCode = props.registeredColorCode ? ref(props.registeredColorCode) : ref('')
     const isOpen = ref(false)
 
     // カラーコードリスト開閉
