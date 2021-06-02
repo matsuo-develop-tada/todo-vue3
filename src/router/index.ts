@@ -12,6 +12,12 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/Register.vue'),
   },
   {
+    path: '/update/:id',
+    name: 'Update',
+    component: () => import('../components/Update.vue'),
+    props: true,
+  },
+  {
     path: '/:catchAll(.*)',
     redirect: '/todo-list',
   },

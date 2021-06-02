@@ -39,6 +39,7 @@
             <input type="checkbox" v-model="todo.checked" @change="setComplete()" />
             {{ todo.content }}
             <span>{{ formatDate(todo.dt_do, '/') }}</span>
+            <router-link :to="{ name: 'Update', params: { id: todo.id_todo } }">更新</router-link>
           </li>
         </ul>
       </div>
@@ -212,6 +213,10 @@ main {
         }
         span {
           margin-left: auto;
+        }
+        .update {
+          border-radius: 5px;
+          padding-right: 10px;
         }
       }
     }

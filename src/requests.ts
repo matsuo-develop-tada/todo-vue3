@@ -19,7 +19,13 @@ export const requests = {
   }): Promise<Todo> => {
     return (await axios.post<Todo>(`${apiUrl}/todos`, createTodoDto)).data
   },
-  delTodos: async (ids: number[]): Promise<{}> => {
+  delTodos: async (ids: number[]): Promise<void> => {
     return (await axios.post(`${apiUrl}/delTodos`, ids)).data
+  },
+  getSingleTodo: async (id: string): Promise<Todo> => {
+    return (await axios.get(`${apiUrl}/getSingleTodo?id_todo=${id}`)).data
+  },
+  updateTodo: async (todo: Todo): Promise<void> => {
+    return await axios.post(`${apiUrl}/updateTodo`, todo)
   },
 }
