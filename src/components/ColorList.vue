@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, ref, PropType } from 'vue'
+import { defineComponent, onMounted, reactive, ref, PropType, watch } from 'vue'
 import { requests } from '../requests'
 import { Color } from '../interfaces/color.interface'
 
@@ -31,8 +31,15 @@ export default defineComponent({
   },
   setup: (props, { emit }) => {
     const state = reactive<{ colors: Color[] }>({ colors: [] })
-    const selectedColorCode = props.registeredColorCode ? ref(props.registeredColorCode) : ref('')
+    const selectedColorCode = ref('')
     const isOpen = ref(false)
+
+    watch([props], () => {
+      // updateの際に登録しているカラーコードを取得できるようにする
+      if (props.registeredColorCode) {
+        selectedColorCode.value = props.registeredColorCode
+      }
+    })
 
     // カラーコードリスト開閉
     const switchList = () => {
