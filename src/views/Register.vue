@@ -150,6 +150,7 @@ export default defineComponent({
     }
     .colorPic {
       z-index: 2;
+      width: 47%;
     }
   }
   .blank {
