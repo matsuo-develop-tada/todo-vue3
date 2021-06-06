@@ -35,7 +35,7 @@
       <!-- Todo一覧 -->
       <div class="todoList">
         <ul>
-          <li v-for="todo in state.todos" :key="todo.id" :style="'background-color: #' + todo.color_code">
+          <li v-for="todo in sortTodo" :key="todo.id" :style="'background-color: #' + todo.color_code">
             <input type="checkbox" v-model="todo.checked" @change="setComplete()" />
             {{ todo.content }}
             <span>{{ formatDate(todo.dt_do, '/') }}</span>
@@ -48,7 +48,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, ref } from 'vue'
+import { computed, defineComponent, onMounted, reactive, ref } from 'vue'
 import { requests } from '../requests'
 import { Todo } from '../interfaces/todo.interface'
 import { formatDate } from '../common'
@@ -86,6 +86,12 @@ export default defineComponent({
       setComplete()
     })
 
+    const sortTodo = computed(() =>
+      state.todos.slice().sort((a, b) => {
+        return a.checked === b.checked ? 0 : a.checked ? 1 : -1
+      }),
+    )
+
     return {
       state,
       selectedDtDo,
@@ -96,6 +102,7 @@ export default defineComponent({
       changeColorCode,
       filterTodos,
       formatDate,
+      sortTodo,
     }
   },
   data() {
