@@ -28,4 +28,7 @@ export const requests = {
   updateTodo: async (todo: Todo): Promise<void> => {
     return await axios.post(`${apiUrl}/updateTodo`, todo)
   },
+  updateCheckFlg: (id: string) => {
+    axios.post(`${apiUrl}/updateCheckFlg?id_todo=${id}`)
+  },
 }
