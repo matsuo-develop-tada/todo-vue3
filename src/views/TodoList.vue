@@ -36,7 +36,7 @@
       <div class="todoList">
         <ul>
           <li v-for="todo in state.todos" :key="todo.id" :style="'background-color: #' + todo.color_code">
-            <input type="checkbox" v-model="todo.checked" @change="setComplete()" @click="checkedTodo(todo.id_todo)" />
+            <input type="checkbox" v-model="todo.checked" @change="setComplete()" @click="checkedTodo(todo)" />
             {{ todo.content }}
             <span>{{ formatDate(todo.dt_do, '/') }}</span>
             <router-link :to="{ name: 'Update', params: { id: todo.id_todo } }">更新</router-link>
@@ -83,16 +83,15 @@ export default defineComponent({
 
     onMounted(async () => {
       state.todos = await requests.getTodos()
+      state.todos = state.todos.sort((todo1, todo2) => {
+        return todo1.checked > todo2.checked ? 1 : todo1.checked < todo2.checked ? -1 : 0
+      })
       setComplete()
     })
 
-    // const sortTodo = computed(() => {
-    //   const todos = state.todos
-    //   return todos.slice().sort((todo) => {
-    //     console.log(todo)
-    //     return todo.checked ? 1 : -1
-    //   })
-    // })
+    const checkedTodo = (todo: Todo) => {
+      requests.updateCheckFlg(todo.id_todo, todo.checked)
+    }
 
     return {
       state,
@@ -104,7 +103,7 @@ export default defineComponent({
       changeColorCode,
       filterTodos,
       formatDate,
-      // sortTodo,
+      checkedTodo,
     }
   },
   data() {
@@ -134,12 +133,6 @@ export default defineComponent({
       this.showTodoDelete = false
       this.state.todos = this.state.todos.filter((todo) => !todo.checked)
       this.setComplete()
-    },
-    checkedTodo(todoId: string) {
-      this.state.todos = this.state.todos.sort((todo, todo2) => {
-        return todo.checked === todo2.checked ? 0 : todo.checked ? 1 : -1
-      })
-      requests.updateCheckFlg(todoId)
     },
   },
 })
