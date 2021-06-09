@@ -14,7 +14,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/update/:id',
     name: 'Update',
-    component: () => import('../components/Update.vue'),
+    component: () => import('../views/Update.vue'),
     props: true,
   },
   {
