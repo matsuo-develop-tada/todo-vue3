@@ -48,7 +48,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, ref } from 'vue'
+import { computed, defineComponent, onMounted, reactive, ref } from 'vue'
 import { requests } from '../requests'
 import { Todo } from '../interfaces/todo.interface'
 import { formatDate } from '../common'
@@ -86,12 +86,13 @@ export default defineComponent({
       setComplete()
     })
 
-    // const sortTodo = computed(() =>
-    //   state.todos.slice().sort((todo, todo2) => {
-    //     console.log(todo.checked > todo2.checked)
-    //     return todo.checked === todo2.checked ? -1 : todo.checked != todo2.checked ? 1 : 0
-    //   }),
-    // )
+    // const sortTodo = computed(() => {
+    //   const todos = state.todos
+    //   return todos.slice().sort((todo) => {
+    //     console.log(todo)
+    //     return todo.checked ? 1 : -1
+    //   })
+    // })
 
     return {
       state,
@@ -135,6 +136,9 @@ export default defineComponent({
       this.setComplete()
     },
     checkedTodo(todoId: string) {
+      this.state.todos = this.state.todos.sort((todo, todo2) => {
+        return todo.checked === todo2.checked ? 0 : todo.checked ? 1 : -1
+      })
       requests.updateCheckFlg(todoId)
     },
   },

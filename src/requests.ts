@@ -28,7 +28,7 @@ export const requests = {
   updateTodo: async (todo: Todo): Promise<void> => {
     return await axios.post(`${apiUrl}/updateTodo`, todo)
   },
-  updateCheckFlg: (id: string) => {
-    axios.post(`${apiUrl}/updateCheckFlg?id_todo=${id}`)
+  updateCheckFlg: async (id: string) => {
+    await axios.post(`${apiUrl}/updateCheckFlg?id_todo=${id}`)
   },
 }
