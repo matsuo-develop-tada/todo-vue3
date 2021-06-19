@@ -85,8 +85,12 @@ export default defineComponent({
     })
 
     const update = () => {
-      requests.updateTodo(state.todo).then(() => {
-        router.push('/todo-list')
+      requests.updateTodo(state.todo).then((response) => {
+        if (response.status === 200) {
+          router.push('/todo-list')
+        } else {
+          alert('更新処理に失敗しました')
+        }
       })
     }
 

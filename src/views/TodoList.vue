@@ -90,7 +90,12 @@ export default defineComponent({
     })
 
     const checkedTodo = (todo: Todo) => {
-      requests.updateCheckFlg(todo.id_todo, todo.checked)
+      requests.updateCheckFlg(todo).then((response) => {
+        if (response.status != 200) {
+          // 返り値でstatus codeが200以外なら、コンソールにエラーを出力する
+          console.error(`Response status ${response.status}`)
+        }
+      })
     }
 
     return {

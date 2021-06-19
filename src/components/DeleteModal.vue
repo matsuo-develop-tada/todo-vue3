@@ -25,9 +25,14 @@ export default {
       this.$emit('cancel')
     },
     deleteTodos() {
-      requests.delTodos(this.completedTodos).then((data) => {
-        console.log(data)
-        this.$emit('closeDeleteModal')
+      requests.delTodos(this.completedTodos).then((response) => {
+        if (response.status === 200) {
+          this.$emit('closeDeleteModal')
+        } else {
+          // 返り値でstatus codeが200以外なら、コンソールにエラーを出力する
+          console.error(`Response status ${response.status}`)
+          this.$emit('closeDeleteModal')
+        }
       })
     },
   },
